@@ -6,6 +6,15 @@ import type { EmergencyData, BloodType } from '../lib/types';
 
 const CONDITIONS = ['Diabetes', 'Asma', 'Epilepsi', 'Jantung', 'Lainnya'];
 
+const PHONE_REGEX = /^08\d{8,12}$/;
+
+function normalizePhone(phone: string): string {
+  let p = phone.replace(/[\s-]/g, '');
+  if (p.startsWith('+62')) p = '0' + p.slice(3);
+  if (p.startsWith('62')) p = '0' + p.slice(2);
+  return p;
+}
+
 export default function Daftar() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
@@ -65,20 +74,88 @@ export default function Daftar() {
     e.preventDefault();
     setError('');
 
-    const validContacts = contacts.filter((c) => c.name.trim() && c.phone.trim());
+    // ===== VALIDASI NAMA LENGKAP =====
+    const nameTrimmed = fullName.trim();
+    if (!nameTrimmed) {
+      setError('Nama lengkap wajib diisi.');
+      return;
+    }
+    if (nameTrimmed.length < 2) {
+      setError('Nama lengkap minimal 2 karakter.');
+      return;
+    }
+
+    // ===== VALIDASI TAHUN LAHIR (opsional, tapi kalau diisi harus valid) =====
+    if (birthYear) {
+      const year = parseInt(birthYear, 10);
+      const currentYear = new Date().getFullYear();
+      if (isNaN(year) || year < 1900 || year > currentYear) {
+        setError(`Tahun lahir harus antara 1900 dan ${currentYear}.`);
+        return;
+      }
+    }
+
+    // ===== VALIDASI ALERGI WAJIB =====
+    // Minimal 1 alergi, atau user ketik "Tidak ada"
+    // (already handled: kalau kosong, kita set ['Tidak ada'] di data)
+
+    // ===== VALIDASI GOLONGAN DARAH =====
     if (!bloodType) {
       setError('Golongan darah wajib diisi.');
       return;
     }
+
+    // ===== VALIDASI KONTAK DARURAT =====
+    for (let i = 0; i < contacts.length; i++) {
+      const name = contacts[i].name.trim();
+      const phoneRaw = contacts[i].phone.trim();
+      const phone = normalizePhone(phoneRaw);
+
+      // Skip kontak yang benar-benar kosong (kecuali kontak pertama)
+      if (!name && !phoneRaw && i > 0) continue;
+
+      // Nama wajib diisi
+      if (!name) {
+        setError(`Nama kontak ${i + 1} wajib diisi.`);
+        return;
+      }
+      if (name.length < 2) {
+        setError(`Nama kontak ${i + 1} minimal 2 karakter.`);
+        return;
+      }
+
+      // HP wajib diisi
+      if (!phoneRaw) {
+        setError(`Nomor HP kontak ${i + 1} wajib diisi.`);
+        return;
+      }
+
+      // Format HP
+      if (!PHONE_REGEX.test(phone)) {
+        setError(
+          `Format HP kontak ${i + 1} tidak valid. Harus 08xx (10-13 digit). Contoh: 08123456789`,
+        );
+        return;
+      }
+    }
+
+    const validContacts = contacts
+      .map((c) => ({
+        name: c.name.trim(),
+        phone: normalizePhone(c.phone.trim()),
+      }))
+      .filter((c) => c.name && c.phone);
+
     if (validContacts.length === 0) {
-      setError('Minimal 1 kontak darurat lengkap.');
+      setError('Minimal 1 kontak darurat lengkap (nama + HP valid).');
       return;
     }
 
+    // ===== BUILD DATA =====
     const id = generateId();
     const data: EmergencyData = {
       id,
-      fullName: fullName.trim() || 'Tanpa Nama',
+      fullName: nameTrimmed,
       birthYear: birthYear ? parseInt(birthYear, 10) : undefined,
       bloodType,
       allergies: allergies.length > 0 ? allergies : ['Tidak ada'],
@@ -100,6 +177,8 @@ export default function Daftar() {
     }
   };
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
@@ -116,60 +195,104 @@ export default function Daftar() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             {/* Identitas */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-800 mb-2">Identitas</h2>
+              <h2 className="text-sm font-semibold text-zinc-800 mb-2">
+                Identitas <span className="text-red-600">*</span>
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <input
                   type="text"
-                  placeholder="Nama Lengkap"
+                  placeholder="Nama Lengkap (wajib)"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
+                  maxLength={60}
+                  required
                   className="sm:col-span-2 rounded-xl border border-zinc-300 px-4 py-3 text-base focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none"
                 />
                 <input
                   type="number"
-                  placeholder="Tahun Lahir"
+                  placeholder={`Tahun Lahir`}
                   value={birthYear}
-                  onChange={(e) => setBirthYear(e.target.value)}
+                  onChange={(e) => setBirthYear(e.target.value.slice(0, 4))}
                   min="1900"
-                  max="2025"
+                  max={currentYear}
                   className="rounded-xl border border-zinc-300 px-4 py-3 text-base focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none"
                 />
               </div>
+              <p className="mt-1 text-xs text-zinc-400">
+                Tahun lahir antara 1900–{currentYear}.
+              </p>
             </div>
 
             {/* Alergi */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-800">Alergi (wajib diisi)</h2>
+              <h2 className="text-sm font-semibold text-zinc-800">
+                Alergi <span className="text-red-600">*</span>
+              </h2>
+              <p className="text-xs text-zinc-400 mt-1">
+                Wajib diisi. Tulis &quot;Tidak ada&quot; jika tidak ada alergi.
+              </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {allergies.map((a, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800">
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800"
+                  >
                     {a}
-                    <button type="button" onClick={() => setAllergies(allergies.filter((_, j) => j !== i))} className="hover:text-amber-600">×</button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAllergies(allergies.filter((_, j) => j !== i))
+                      }
+                      className="hover:text-amber-600"
+                    >
+                      ×
+                    </button>
                   </span>
                 ))}
                 <input
                   value={newAllergy}
                   onChange={(e) => setNewAllergy(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); addAllergy(); }
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addAllergy();
+                    }
                   }}
                   placeholder="Alergi..."
+                  maxLength={60}
                   className="flex-1 min-w-[120px] rounded-lg border border-zinc-300 px-3 py-2 text-sm"
                 />
               </div>
-              <button type="button" onClick={addAllergy} className="mt-1 text-xs text-teal-600 hover:underline">+ Tambah alergi</button>
+              <button
+                type="button"
+                onClick={addAllergy}
+                className="mt-1 text-xs text-teal-600 hover:underline"
+              >
+                + Tambah alergi
+              </button>
             </div>
 
             {/* Penyakit Kronis */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-800">Penyakit Kronis</h2>
+              <h2 className="text-sm font-semibold text-zinc-800">
+                Penyakit Kronis
+              </h2>
               <div className="mt-2 flex flex-wrap gap-3">
                 {CONDITIONS.map((c) => (
-                  <label key={c} className="inline-flex items-center gap-2 text-sm">
+                  <label
+                    key={c}
+                    className="inline-flex items-center gap-2 text-sm"
+                  >
                     <input
                       type="checkbox"
                       checked={conditions.includes(c)}
-                      onChange={(e) => setConditions(e.target.checked ? [...conditions, c] : conditions.filter((x) => x !== c))}
+                      onChange={(e) =>
+                        setConditions(
+                          e.target.checked
+                            ? [...conditions, c]
+                            : conditions.filter((x) => x !== c),
+                        )
+                      }
                       className="h-4 w-4 rounded border-zinc-300 text-teal-600"
                     />
                     {c}
@@ -183,60 +306,106 @@ export default function Daftar() {
               <h2 className="text-sm font-semibold text-zinc-800">Obat Rutin</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 {meds.map((m, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-3 py-1 text-sm text-violet-800">
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-3 py-1 text-sm text-violet-800"
+                  >
                     {m}
-                    <button type="button" onClick={() => setMeds(meds.filter((_, j) => j !== i))} className="hover:text-violet-600">×</button>
+                    <button
+                      type="button"
+                      onClick={() => setMeds(meds.filter((_, j) => j !== i))}
+                      className="hover:text-violet-600"
+                    >
+                      ×
+                    </button>
                   </span>
                 ))}
                 <input
                   value={newMed}
                   onChange={(e) => setNewMed(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') { e.preventDefault(); addMed(); }
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addMed();
+                    }
                   }}
                   placeholder="Obat rutin..."
+                  maxLength={60}
                   className="flex-1 min-w-[120px] rounded-lg border border-zinc-300 px-3 py-2 text-sm"
                 />
               </div>
-              <button type="button" onClick={addMed} className="mt-1 text-xs text-violet-600 hover:underline">+ Tambah obat</button>
+              <button
+                type="button"
+                onClick={addMed}
+                className="mt-1 text-xs text-violet-600 hover:underline"
+              >
+                + Tambah obat
+              </button>
             </div>
 
             {/* Golongan Darah */}
             <div>
-              <label className="block text-sm font-semibold text-zinc-800 mb-1">Golongan Darah</label>
+              <label className="block text-sm font-semibold text-zinc-800 mb-1">
+                Golongan Darah <span className="text-red-600">*</span>
+              </label>
               <select
                 value={bloodType}
                 onChange={(e) => setBloodType(e.target.value as BloodType | '')}
+                required
                 className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-base"
               >
                 <option value="">Pilih...</option>
                 {BLOOD_TYPES.map((b) => (
-                  <option key={b} value={b}>{b}</option>
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
                 ))}
               </select>
             </div>
 
             {/* Kontak Darurat */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-800">Kontak Darurat</h2>
-              <p className="text-xs text-zinc-400 mt-1">Minimal 1, maksimal 3.</p>
+              <h2 className="text-sm font-semibold text-zinc-800">
+                Kontak Darurat <span className="text-red-600">*</span>
+              </h2>
+              <p className="text-xs text-zinc-400 mt-1">
+                Minimal 1, maksimal 3. Format HP: 08xx (10-13 digit).
+              </p>
               <div className="mt-2 space-y-3">
                 {contacts.map((c, i) => (
-                  <div key={i} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div
+                    key={i}
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                  >
                     <input
                       value={c.name}
-                      onChange={(e) => updateContact(i, 'name', e.target.value)}
+                      onChange={(e) =>
+                        updateContact(i, 'name', e.target.value)
+                      }
                       placeholder="Nama (wajib)"
+                      maxLength={60}
                       className="rounded-xl border border-zinc-300 px-4 py-3 text-base"
                     />
                     <input
                       value={c.phone}
-                      onChange={(e) => updateContact(i, 'phone', e.target.value)}
-                      placeholder="No. HP"
+                      onChange={(e) => {
+                        // Hanya angka, max 14 digit
+                        const cleaned = e.target.value
+                          .replace(/\D/g, '')
+                          .slice(0, 14);
+                        updateContact(i, 'phone', cleaned);
+                      }}
+                      placeholder="08123456789"
+                      inputMode="numeric"
+                      maxLength={14}
                       className="rounded-xl border border-zinc-300 px-4 py-3 text-base"
                     />
                     {contacts.length > 1 && (
-                      <button type="button" onClick={() => removeContact(i)} className="text-xs text-red-600 sm:col-span-2 text-left">
+                      <button
+                        type="button"
+                        onClick={() => removeContact(i)}
+                        className="text-xs text-red-600 sm:col-span-2 text-left"
+                      >
                         Hapus kontak ini
                       </button>
                     )}
@@ -244,18 +413,27 @@ export default function Daftar() {
                 ))}
               </div>
               {contacts.length < 3 && (
-                <button type="button" onClick={addContact} className="mt-2 text-xs text-teal-600 hover:underline">+ Tambah kontak</button>
+                <button
+                  type="button"
+                  onClick={addContact}
+                  className="mt-2 text-xs text-teal-600 hover:underline"
+                >
+                  + Tambah kontak
+                </button>
               )}
             </div>
 
             {/* Catatan */}
             <div>
-              <label className="block text-sm font-semibold text-zinc-800 mb-1">Catatan Singkat (opsional)</label>
+              <label className="block text-sm font-semibold text-zinc-800 mb-1">
+                Catatan Singkat (opsional)
+              </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Contoh: pakai alat bantu dengar"
                 rows={3}
+                maxLength={500}
                 className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-base"
               />
             </div>

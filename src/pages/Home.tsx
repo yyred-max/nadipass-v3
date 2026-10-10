@@ -374,7 +374,6 @@ export default function Home() {
                 alt="NadiPass"
                 className="h-10 w-auto"
               />
-              <span className="text-sm font-semibold text-zinc-700">NadiPass</span>
             </div>
 
             <nav className="flex flex-wrap justify-center gap-6 text-sm">

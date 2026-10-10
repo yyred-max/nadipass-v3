@@ -1,48 +1,47 @@
 import type { EmergencyData } from './types';
 
-const KEY_PREFIX = 'nadipass:';
+const API_BASE = import.meta.env.VITE_API_BASE || '';
 
-export function savePatient(data: EmergencyData): void {
-  try {
-    localStorage.setItem(KEY_PREFIX + data.id, JSON.stringify(data));
-  } catch (err) {
-    console.error('[storage] savePatient failed:', err);
-    throw err;
+export async function savePatient(data: EmergencyData): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/patients`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Gagal menyimpan data');
   }
 }
 
-export function getPatient(id: string): EmergencyData | null {
+export async function getPatient(id: string): Promise<EmergencyData | null> {
   try {
-    const raw = localStorage.getItem(KEY_PREFIX + id);
-    if (!raw) return null;
-    return JSON.parse(raw) as EmergencyData;
+    const res = await fetch(`${API_BASE}/api/patients/${id}`);
+    if (!res.ok) return null;
+    const d = await res.json();
+    return {
+      id: d.id,
+      fullName: d.fullName,
+      birthYear: d.birthYear,
+      bloodType: d.bloodType,
+      allergies: d.allergies || [],
+      conditions: d.conditions || [],
+      meds: d.meds || [],
+      contacts: d.contacts || [],
+      notes: d.notes,
+      createdAt: new Date(d.createdAt).getTime(),
+    };
   } catch (err) {
     console.error('[storage] getPatient failed:', err);
     return null;
   }
 }
 
-export function hasPatient(id: string): boolean {
-  try {
-    return localStorage.getItem(KEY_PREFIX + id) !== null;
-  } catch {
-    return false;
-  }
+export async function hasPatient(id: string): Promise<boolean> {
+  const p = await getPatient(id);
+  return p !== null;
 }
 
-export function deletePatient(id: string): void {
-  try {
-    localStorage.removeItem(KEY_PREFIX + id);
-  } catch (err) {
-    console.error('[storage] deletePatient failed:', err);
-  }
-}
-
-export function listPatientIds(): string[] {
-  try {
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith(KEY_PREFIX));
-    return keys.map((k) => k.slice(KEY_PREFIX.length));
-  } catch {
-    return [];
-  }
+export async function listPatientIds(): Promise<string[]> {
+  return [];
 }

@@ -19,6 +19,7 @@ export default function Daftar() {
   const [contacts, setContacts] = useState([{ name: '', phone: '' }]);
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const addAllergy = () => {
     const t = newAllergy.trim();
@@ -60,7 +61,7 @@ export default function Daftar() {
     setContacts(contacts.filter((_, j) => j !== i));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -87,19 +88,29 @@ export default function Daftar() {
       notes: notes.trim() || undefined,
       createdAt: Date.now(),
     };
-    savePatient(data);
-    navigate(`/qr?id=${id}`);
+
+    setSaving(true);
+    try {
+      await savePatient(data);
+      navigate(`/qr?id=${id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan data');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
-        <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">← Kembali</Link>
+        <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">
+          ← Kembali
+        </Link>
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
           <h1 className="text-xl font-bold">Isi Data Kritis</h1>
           <p className="mt-1 text-xs text-zinc-500">
-            Data tersimpan di HP kamu. Tidak dikirim ke server.
+            Data tersimpan di server. Bisa diakses petugas dari HP mereka.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
@@ -257,9 +268,10 @@ export default function Daftar() {
 
             <button
               type="submit"
-              className="w-full h-14 rounded-xl bg-teal-600 text-white font-semibold text-base hover:bg-teal-700"
+              disabled={saving}
+              className="w-full h-14 rounded-xl bg-teal-600 text-white font-semibold text-base hover:bg-teal-700 disabled:opacity-50"
             >
-              Simpan & Buat QR
+              {saving ? 'Menyimpan...' : 'Simpan & Buat QR'}
             </button>
           </form>
         </div>

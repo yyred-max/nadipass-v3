@@ -16,15 +16,18 @@ export default function QRPage() {
     setAllIds(keys.map((k) => k.replace('nadipass:', '')));
   }, []);
 
-  useEffect(() => {
-    if (!id) return;
-    const p = getPatient(id);
+useEffect(() => {
+  if (!id) return;
+  async function load() {
+    const p = await getPatient(id);
     setData(p);
     if (p) {
       const url = `${window.location.origin}/e/${id}`;
       QRCode.toDataURL(url, { width: 300, margin: 1 }).then(setQrDataUrl);
     }
-  }, [id]);
+  }
+  load();
+}, [id]);
 
   // Kalau tidak ada ID → tampilkan list pasien
   if (!id) {

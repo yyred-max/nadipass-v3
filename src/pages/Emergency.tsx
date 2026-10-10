@@ -24,13 +24,16 @@ export default function Emergency() {
   const [patient, setPatient] = useState<EmergencyData | null>(null);
 
   useEffect(() => {
-    const p = getPatient(id);
+  async function load() {
+    const p = await getPatient(id);
     if (!p) {
       setError('Data pasien tidak ditemukan.');
     } else {
       setPatient(p);
     }
-  }, [id]);
+  }
+  load();
+}, [id]);
 
   if (error) {
     return (

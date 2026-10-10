@@ -1,32 +1,35 @@
-# React + TypeScript + Vite
+# NadiPass v3
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Identitas darurat pasien. Petugas scan QR, data kritis muncul, keluarga langsung tahu.**
 
-Currently, two official plugins are available:
+Hybrid Web2 + Web3 untuk 5 menit pertama saat pasien tidak sadar.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Fitur
 
-## React Compiler
+- Pasien isi data kritis sekali (alergi, obat, kontak) → tersimpan di localStorage
+- QR berisi ID saja (bukan data medis)
+- Petugas scan → 2 tap pecah kaca → data kritis terbuka
+- Setiap akses tercatat di Monad testnet (hash audit)
+- Data medis tidak on-chain — privasi terjaga
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the Oxlint configuration
+- **Frontend:** Vite + React + TypeScript + Tailwind v4
+- **Web3:** viem + Monad testnet
+- **Storage:** localStorage (tanpa backend)
+- **Kontrak:** Solidity 0.8.20 (`NadiPassRegistry`)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Halaman
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+| Route | Fungsi |
+|-------|--------|
+| `/` | Beranda |
+| `/daftar` | Form data kritis |
+| `/qr` | Kartu QR + list pasien |
+| `/e/:id` | Layar pecah kaca (petugas) |
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Setup
+
+```bash
+npm install
+npm run dev

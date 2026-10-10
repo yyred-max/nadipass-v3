@@ -11,7 +11,7 @@ const REASONS: { value: BreakGlassReason; label: string }[] = [
   { value: 'LAINNYA', label: 'Other' },
 ];
 
-const SESSION_DURATION = 2 * 60 * 60; // 2 hours in seconds
+const SESSION_DURATION = 60;
 
 type Stage = 'locked' | 'break' | 'unlocked';
 

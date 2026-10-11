@@ -10,7 +10,7 @@ export async function savePatient(data: EmergencyData): Promise<void> {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Gagal menyimpan data');
+    throw new Error(err.error || 'Failed to save data');
   }
 }
 

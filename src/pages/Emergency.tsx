@@ -11,7 +11,12 @@ const REASONS: { value: BreakGlassReason; label: string }[] = [
   { value: 'LAINNYA', label: 'Other' },
 ];
 
-const SESSION_DURATION = 60;
+// Session duration (seconds). Default: 2 hours (7200).
+// For demo: set VITE_SESSION_DURATION_SECONDS="60" in .env.local
+const SESSION_DURATION = parseInt(
+  import.meta.env.VITE_SESSION_DURATION_SECONDS || '7200',
+  10,
+);
 
 type Stage = 'locked' | 'break' | 'unlocked';
 
@@ -126,10 +131,7 @@ export default function Emergency() {
     return (
       <div className="min-h-screen bg-zinc-50 px-4 py-8">
         <div className="mx-auto max-w-lg text-center">
-          <Link
-            to="/"
-            className="mb-4 inline-block text-sm text-zinc-500"
-          >
+          <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">
             ← Back
           </Link>
 

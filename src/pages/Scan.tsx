@@ -17,7 +17,7 @@ export default function Scan() {
       stopScanner();
       setTimeout(() => navigate(`/e/${match[1]}`), 800);
     } else {
-      setError('QR tidak valid. Pastikan QR dari NadiPass.');
+      setError('Invalid QR. Make sure it\'s from NadiPass.');
     }
   };
 
@@ -34,7 +34,7 @@ export default function Scan() {
       );
       setScanning(true);
     } catch (err) {
-      setError('Tidak dapat mengakses kamera. Coba upload gambar QR.');
+      setError('Cannot access camera. Try uploading a QR image.');
       scannerRef.current = null;
     }
   };
@@ -67,7 +67,7 @@ export default function Scan() {
       const decoded = await scanner.scanFile(file, false);
       handleScanSuccess(decoded);
     } catch {
-      setError('QR tidak terdeteksi. Coba foto ulang dengan jelas.');
+      setError('QR not detected. Try retaking the photo.');
     }
   };
 
@@ -85,15 +85,15 @@ export default function Scan() {
         </Link>
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <h1 className="text-xl font-bold">Scan QR Pasien</h1>
+          <h1 className="text-xl font-bold">Scan Patient QR</h1>
           <p className="mt-1 text-xs text-zinc-500">
-            Arahkan kamera ke QR di HP, helm, atau dompet pasien.
+            Point your camera at the QR on the patient's phone, helmet, or wallet.
           </p>
 
           {success ? (
             <div className="mt-6 rounded-xl bg-teal-50 border-l-4 border-teal-500 px-4 py-6 text-center">
-              <p className="text-lg font-semibold text-teal-700">QR terdeteksi!</p>
-              <p className="text-sm text-teal-600 mt-1">Membuka data darurat...</p>
+              <p className="text-lg font-semibold text-teal-700">QR detected!</p>
+              <p className="text-sm text-teal-600 mt-1">Opening emergency data...</p>
             </div>
           ) : (
             <>
@@ -108,7 +108,7 @@ export default function Scan() {
                     onClick={startScan}
                     className="w-full h-14 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700"
                   >
-                    Mulai Scan
+                    Start Scan
                   </button>
                 ) : (
                   <button
@@ -121,7 +121,7 @@ export default function Scan() {
 
                 <label className="block w-full">
                   <span className="text-xs text-zinc-500 text-center block mb-1">
-                    Kamera tidak bisa? Upload gambar QR:
+                    Camera not working? Upload a QR image:
                   </span>
                   <input
                     type="file"
@@ -142,7 +142,7 @@ export default function Scan() {
         </div>
 
         <p className="mt-4 text-center text-xs text-zinc-400">
-          Petugas tidak perlu login. Data terbuka hanya untuk darurat.
+          Responders do not need an account. Data opens only in emergencies.
         </p>
       </div>
     </div>

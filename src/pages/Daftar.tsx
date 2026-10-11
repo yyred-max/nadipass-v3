@@ -4,7 +4,7 @@ import { savePatient } from '../lib/storage';
 import { generateId, BLOOD_TYPES } from '../lib/types';
 import type { EmergencyData, BloodType } from '../lib/types';
 
-const CONDITIONS = ['Diabetes', 'Asma', 'Epilepsi', 'Jantung', 'Lainnya'];
+const CONDITIONS = ['Diabetes', 'Asthma', 'Epilepsy', 'Cardiac', 'Other'];
 
 const PHONE_REGEX = /^08\d{8,12}$/;
 
@@ -34,7 +34,7 @@ export default function Daftar() {
     const t = newAllergy.trim();
     if (!t) return;
     if (allergies.some((a) => a.toLowerCase() === t.toLowerCase())) {
-      setError('Alergi ini sudah ada.');
+      setError('This allergy already exists.');
       return;
     }
     setAllergies([...allergies, t]);
@@ -46,7 +46,7 @@ export default function Daftar() {
     const t = newMed.trim();
     if (!t) return;
     if (meds.some((m) => m.toLowerCase() === t.toLowerCase())) {
-      setError('Obat ini sudah ada.');
+      setError('This medication already exists.');
       return;
     }
     setMeds([...meds, t]);
@@ -60,7 +60,7 @@ export default function Daftar() {
 
   const addContact = () => {
     if (contacts.length >= 3) {
-      setError('Maksimal 3 kontak.');
+      setError('Maximum 3 contacts.');
       return;
     }
     setContacts([...contacts, { name: '', phone: '' }]);
@@ -74,18 +74,18 @@ export default function Daftar() {
     e.preventDefault();
     setError('');
 
-    // ===== VALIDASI NAMA LENGKAP =====
+    // ===== VALIDATE FULL NAME =====
     const nameTrimmed = fullName.trim();
     if (!nameTrimmed) {
-      setError('Nama lengkap wajib diisi.');
+      setError('Full name is required.');
       return;
     }
     if (nameTrimmed.length < 2) {
-      setError('Nama lengkap minimal 2 karakter.');
+      setError('Full name must be at least 2 characters.');
       return;
     }
 
-    // ===== VALIDASI TAHUN LAHIR (opsional, tapi kalau diisi harus valid) =====
+    // ===== VALIDATE YEAR OF BIRTH (optional, must be valid if filled) =====
     if (birthYear) {
       const year = parseInt(birthYear, 10);
       const currentYear = new Date().getFullYear();
@@ -95,26 +95,26 @@ export default function Daftar() {
       }
     }
 
-    // ===== VALIDASI ALERGI WAJIB =====
-    // Minimal 1 alergi, atau user ketik "Tidak ada"
-    // (already handled: kalau kosong, kita set ['Tidak ada'] di data)
+    // ===== VALIDATE ALLERGIES (REQUIRED) =====
+    // Minimal 1 alergi, atau user ketik "None"
+    // (already handled: if empty, we set ['Tidak ada'] di data)
 
-    // ===== VALIDASI GOLONGAN DARAH =====
+    // ===== VALIDATE BLOOD TYPE =====
     if (!bloodType) {
-      setError('Golongan darah wajib diisi.');
+      setError('Blood type is required.');
       return;
     }
 
-    // ===== VALIDASI KONTAK DARURAT =====
+    // ===== VALIDATE EMERGENCY CONTACTS =====
     for (let i = 0; i < contacts.length; i++) {
       const name = contacts[i].name.trim();
       const phoneRaw = contacts[i].phone.trim();
       const phone = normalizePhone(phoneRaw);
 
-      // Skip kontak yang benar-benar kosong (kecuali kontak pertama)
+      // Skip contact that is completely empty (except first contact)
       if (!name && !phoneRaw && i > 0) continue;
 
-      // Nama wajib diisi
+      // Name is required
       if (!name) {
         setError(`Nama kontak ${i + 1} wajib diisi.`);
         return;
@@ -124,16 +124,16 @@ export default function Daftar() {
         return;
       }
 
-      // HP wajib diisi
+      // Phone is required
       if (!phoneRaw) {
         setError(`Nomor HP kontak ${i + 1} wajib diisi.`);
         return;
       }
 
-      // Format HP
+      // Phone format
       if (!PHONE_REGEX.test(phone)) {
         setError(
-          `Format HP kontak ${i + 1} tidak valid. Harus 08xx (10-13 digit). Contoh: 08123456789`,
+          `Contact {i + 1} phone format is invalid. Must be 08xx (10-13 digits). Example: 08123456789`,
         );
         return;
       }
@@ -147,7 +147,7 @@ export default function Daftar() {
       .filter((c) => c.name && c.phone);
 
     if (validContacts.length === 0) {
-      setError('Minimal 1 kontak darurat lengkap (nama + HP valid).');
+      setError('At least 1 complete emergency contact (name + valid phone).');
       return;
     }
 
@@ -183,13 +183,13 @@ export default function Daftar() {
     <div className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
         <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">
-          ← Kembali
+          ← Back
         </Link>
 
         <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <h1 className="text-xl font-bold">Isi Data Kritis</h1>
+          <h1 className="text-xl font-bold">Enter Critical Data</h1>
           <p className="mt-1 text-xs text-zinc-500">
-            Data tersimpan di server. Bisa diakses petugas dari HP mereka.
+            Data is stored securely on the server. Responders can access it from their devices.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
@@ -201,7 +201,7 @@ export default function Daftar() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <input
                   type="text"
-                  placeholder="Nama Lengkap (wajib)"
+                  placeholder="Full Name (required)"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   maxLength={60}
@@ -210,7 +210,7 @@ export default function Daftar() {
                 />
                 <input
                   type="number"
-                  placeholder={`Tahun Lahir`}
+                  placeholder={`Year of Birth`}
                   value={birthYear}
                   onChange={(e) => setBirthYear(e.target.value.slice(0, 4))}
                   min="1900"
@@ -223,13 +223,13 @@ export default function Daftar() {
               </p>
             </div>
 
-            {/* Alergi */}
+            {/* Allergies */}
             <div>
               <h2 className="text-sm font-semibold text-zinc-800">
-                Alergi <span className="text-red-600">*</span>
+                Allergies <span className="text-red-600">*</span>
               </h2>
               <p className="text-xs text-zinc-400 mt-1">
-                Wajib diisi. Tulis &quot;Tidak ada&quot; jika tidak ada alergi.
+                Required. Type &quot;None&quot; if you have no allergies.
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {allergies.map((a, i) => (
@@ -258,7 +258,7 @@ export default function Daftar() {
                       addAllergy();
                     }
                   }}
-                  placeholder="Alergi..."
+                  placeholder="Allergies..."
                   maxLength={60}
                   className="flex-1 min-w-[120px] rounded-lg border border-zinc-300 px-3 py-2 text-sm"
                 />
@@ -268,14 +268,14 @@ export default function Daftar() {
                 onClick={addAllergy}
                 className="mt-1 text-xs text-teal-600 hover:underline"
               >
-                + Tambah alergi
+                + Add allergy
               </button>
             </div>
 
-            {/* Penyakit Kronis */}
+            {/* Chronic Conditions */}
             <div>
               <h2 className="text-sm font-semibold text-zinc-800">
-                Penyakit Kronis
+                Chronic Conditions
               </h2>
               <div className="mt-2 flex flex-wrap gap-3">
                 {CONDITIONS.map((c) => (
@@ -301,9 +301,9 @@ export default function Daftar() {
               </div>
             </div>
 
-            {/* Obat Rutin */}
+            {/* Routine Medications */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-800">Obat Rutin</h2>
+              <h2 className="text-sm font-semibold text-zinc-800">Routine Medications</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 {meds.map((m, i) => (
                   <span
@@ -329,7 +329,7 @@ export default function Daftar() {
                       addMed();
                     }
                   }}
-                  placeholder="Obat rutin..."
+                  placeholder="Medication..."
                   maxLength={60}
                   className="flex-1 min-w-[120px] rounded-lg border border-zinc-300 px-3 py-2 text-sm"
                 />
@@ -339,14 +339,14 @@ export default function Daftar() {
                 onClick={addMed}
                 className="mt-1 text-xs text-violet-600 hover:underline"
               >
-                + Tambah obat
+                + Add medication
               </button>
             </div>
 
-            {/* Golongan Darah */}
+            {/* Blood Type */}
             <div>
               <label className="block text-sm font-semibold text-zinc-800 mb-1">
-                Golongan Darah <span className="text-red-600">*</span>
+                Blood Type <span className="text-red-600">*</span>
               </label>
               <select
                 value={bloodType}
@@ -354,7 +354,7 @@ export default function Daftar() {
                 required
                 className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-base"
               >
-                <option value="">Pilih...</option>
+                <option value="">Select...</option>
                 {BLOOD_TYPES.map((b) => (
                   <option key={b} value={b}>
                     {b}
@@ -363,13 +363,13 @@ export default function Daftar() {
               </select>
             </div>
 
-            {/* Kontak Darurat */}
+            {/* Emergency Contacts */}
             <div>
               <h2 className="text-sm font-semibold text-zinc-800">
-                Kontak Darurat <span className="text-red-600">*</span>
+                Emergency Contacts <span className="text-red-600">*</span>
               </h2>
               <p className="text-xs text-zinc-400 mt-1">
-                Minimal 1, maksimal 3. Format HP: 08xx (10-13 digit).
+                Minimum 1, maximum 3. Phone: 08xx (10-13 digits).
               </p>
               <div className="mt-2 space-y-3">
                 {contacts.map((c, i) => (
@@ -382,7 +382,7 @@ export default function Daftar() {
                       onChange={(e) =>
                         updateContact(i, 'name', e.target.value)
                       }
-                      placeholder="Nama (wajib)"
+                      placeholder="Name (required)"
                       maxLength={60}
                       className="rounded-xl border border-zinc-300 px-4 py-3 text-base"
                     />
@@ -406,7 +406,7 @@ export default function Daftar() {
                         onClick={() => removeContact(i)}
                         className="text-xs text-red-600 sm:col-span-2 text-left"
                       >
-                        Hapus kontak ini
+                        Remove this contact
                       </button>
                     )}
                   </div>
@@ -418,7 +418,7 @@ export default function Daftar() {
                   onClick={addContact}
                   className="mt-2 text-xs text-teal-600 hover:underline"
                 >
-                  + Tambah kontak
+                  + Add contact
                 </button>
               )}
             </div>
@@ -426,12 +426,12 @@ export default function Daftar() {
             {/* Catatan */}
             <div>
               <label className="block text-sm font-semibold text-zinc-800 mb-1">
-                Catatan Singkat (opsional)
+                Notes (optional)
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Contoh: pakai alat bantu dengar"
+                placeholder="e.g., uses a hearing aid"
                 rows={3}
                 maxLength={500}
                 className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-base"
@@ -449,7 +449,7 @@ export default function Daftar() {
               disabled={saving}
               className="w-full h-14 rounded-xl bg-teal-600 text-white font-semibold text-base hover:bg-teal-700 disabled:opacity-50"
             >
-              {saving ? 'Menyimpan...' : 'Simpan & Buat QR'}
+              {saving ? 'Saving...' : 'Save & Generate QR'}
             </button>
           </form>
         </div>

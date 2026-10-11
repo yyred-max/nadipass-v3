@@ -152,13 +152,13 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl">
-              Petugas bisa buka data darurat
-              <span className="text-red-600"> meski pasien pingsan.</span>
+              Responders can access emergency data
+              <span className="text-red-600"> even when patients are unconscious.</span>
             </h1>
 
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-600">
-              Data medis tetap di HP kamu. Hanya hash audit yang masuk blockchain —
-              transparan, tidak bisa diubah, dan tetap privasi.
+              Medical data stays on your phone. Only audit hashes go on-chain —
+              transparent, immutable, and private.
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -166,13 +166,13 @@ export default function Home() {
                 to="/daftar"
                 className="flex h-14 items-center justify-center rounded-xl bg-teal-600 px-7 text-base font-semibold text-white transition-colors duration-200 hover:bg-teal-700"
               >
-                Daftar Sekarang
+                Register Now
               </Link>
               <Link
                 to="/qr"
                 className="flex h-14 items-center justify-center rounded-xl border-2 border-teal-600 px-7 text-base font-semibold text-teal-700 transition-colors duration-200 hover:bg-teal-50"
               >
-                Lihat QR Saya
+                View My QR
               </Link>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function Home() {
             {/* Kiri: 4 card */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
-                Setiap akses tercatat di blockchain
+                Every access is recorded on blockchain
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-zinc-600">
                 Data medis tetap di HP kamu. Hanya hash audit yang on-chain.
@@ -212,26 +212,26 @@ export default function Home() {
                 {[
                   {
                     n: 'Immutable',
-                    t: 'Log tidak bisa dihapus/diubah',
-                    d: 'Setiap akses dicetak ke chain, tidak dapat dimodifikasi.',
+                    t: 'Logs cannot be deleted or modified',
+                    d: 'Every access is written to the chain, immutable.',
                     icon: <CheckIcon />,
                   },
                   {
                     n: 'Transparan',
-                    t: 'Siapa, kapan, alasan apa',
-                    d: 'Setiap akses mencatat pemohon, waktu, dan alasan.',
+                    t: 'Who, when, why',
+                    d: 'Every access records the requester, time, and reason.',
                     icon: <EyeIcon />,
                   },
                   {
                     n: 'Privasi',
-                    t: 'Data medis tidak on-chain',
-                    d: 'Hanya hash audit yang masuk chain, data asli tetap di HP.',
+                    t: 'Medical data is NOT on-chain',
+                    d: 'Only audit hashes go on-chain. Original data stays on your phone.',
                     icon: <ShieldCheckIcon />,
                   },
                   {
                     n: 'Cepat',
-                    t: '2 tap buka data',
-                    d: 'Data kritis tampil dalam hitungan detik tanpa login.',
+                    t: '2 taps to open data',
+                    d: 'Critical data appears in seconds, no login required.',
                     icon: <ClockIcon />,
                   },
                 ].map((s) => (
@@ -295,28 +295,28 @@ export default function Home() {
       <section className="px-6 py-16 bg-zinc-50 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-center text-3xl font-bold tracking-tight text-zinc-900">
-            Cara Kerja
+            How It Works
           </h2>
           <p className="mt-3 text-center text-lg leading-relaxed text-zinc-600">
-            Dua langkah sederhana buat petugas dan keluarga.
+            Two simple steps for responders and families.
           </p>
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {[
               {
                 icon: <DataIcon />,
-                t: 'Isi data sekali',
-                d: 'Alergi, obat, kontak darurat. Tersimpan di HP kamu.',
+                t: 'Fill data once',
+                d: 'Allergies, medications, emergency contacts. Saved on your phone.',
               },
               {
                 icon: <PasteIcon />,
-                t: 'Tempel QR',
-                d: 'Cetak kartu ukuran ATM. Simpan di dompet/HP.',
+                t: 'Attach QR',
+                d: 'Print an ATM-size card. Keep it in your wallet or phone.',
               },
               {
                 icon: <ScanIcon />,
-                t: 'Petugas scan',
-                d: '2 tap, data kritis terbuka. Keluarga dinotifikasi.',
+                t: 'Responder scans',
+                d: '2 taps, critical data opens. Family is notified.',
               },
             ].map((s) => (
               <div
@@ -349,15 +349,15 @@ export default function Home() {
             <div className="relative grid gap-10 text-center sm:grid-cols-3">
               <div>
                 <p className="text-5xl font-bold tracking-tight">2</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">tap buka data</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">taps to open data</p>
               </div>
               <div>
                 <p className="text-5xl font-bold tracking-tight">&lt; 30 detik</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">waktu buka</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">open time</p>
               </div>
               <div>
                 <p className="text-5xl font-bold tracking-tight">100%</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">tercatat di chain</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">recorded on-chain</p>
               </div>
             </div>
           </div>
@@ -416,7 +416,7 @@ export default function Home() {
 
           <div className="mt-8 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-400">
             <p>
-              NadiPass bukan rekam medis resmi. Setiap akses dicatat di Monad
+              NadiPass is not an official medical record. Every access is recorded on Monad
               testnet.
             </p>
             <p className="mt-2">

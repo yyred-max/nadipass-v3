@@ -33,12 +33,12 @@ export default function QRPage() {
       <div className="min-h-screen bg-zinc-50 px-4 py-8">
         <div className="mx-auto max-w-2xl">
           <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">
-            ← Kembali
+            ← Back
           </Link>
           <div className="rounded-2xl bg-white p-6 shadow-sm">
-            <h1 className="text-xl font-bold">Kartu Darurat</h1>
+            <h1 className="text-xl font-bold">Emergency Card</h1>
             <p className="mt-1 text-xs text-zinc-500">
-              Masukkan ID pasien untuk melihat kartu, atau daftar pasien baru.
+              Enter a patient ID to view the card, or register a new patient.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -46,19 +46,19 @@ export default function QRPage() {
                 to="/daftar"
                 className="block w-full rounded-xl bg-teal-600 px-6 py-4 text-white font-semibold text-center hover:bg-teal-700"
               >
-                Daftar Pasien Baru
+                Register New Patient
               </Link>
               <Link
                 to="/scan"
                 className="block w-full rounded-xl border-2 border-teal-600 px-6 py-4 text-teal-700 font-semibold text-center hover:bg-teal-50"
               >
-                📷 Scan QR Pasien (Petugas)
+                📷 Scan Patient QR (Responder)
               </Link>
             </div>
 
             <div className="mt-6 pt-6 border-t border-zinc-200">
               <p className="text-xs text-zinc-500 text-center">
-                Untuk petugas: scan QR pasien dari kartu/HP/helm.
+                For responders: scan a patient's QR from their card, phone, or helmet.
               </p>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function QRPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <p className="text-zinc-500">Memuat data...</p>
+        <p className="text-zinc-500">Loading...</p>
       </div>
     );
   }
@@ -81,9 +81,9 @@ export default function QRPage() {
     return (
       <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
         <div className="text-center">
-          <p className="text-zinc-600">Data tidak ditemukan di server.</p>
+          <p className="text-zinc-600">Patient data not found.</p>
           <Link to="/daftar" className="mt-4 inline-block rounded-xl bg-teal-600 px-6 py-3 text-white font-semibold">
-            Daftar Pasien Baru
+            Register New Patient
           </Link>
         </div>
       </div>
@@ -95,12 +95,12 @@ export default function QRPage() {
     <div className="min-h-screen bg-zinc-50 px-4 py-8">
       <div className="mx-auto max-w-2xl">
         <Link to="/" className="mb-4 inline-block text-sm text-zinc-500">
-          ← Kembali
+          ← Back
         </Link>
 
         <div className="rounded-2xl bg-white p-6 shadow-sm text-center">
-          <h1 className="text-xl font-bold">Kartu Darurat</h1>
-          <p className="mt-1 text-xs text-zinc-500">Print atau simpan di dompet.</p>
+          <h1 className="text-xl font-bold">Emergency Card</h1>
+          <p className="mt-1 text-xs text-zinc-500">Print or keep it in your wallet.</p>
 
           {/* Kartu ukuran ATM */}
           <div className="mt-6 mx-auto w-[8.5cm] h-[5.4cm] rounded-xl border-2 border-zinc-300 flex overflow-hidden shadow-lg">
@@ -123,16 +123,16 @@ export default function QRPage() {
             <div className="flex-1 p-3 flex flex-col justify-between bg-white">
               <div>
                 <p className="text-[10px] font-bold text-zinc-700">
-                  Nama: {data.fullName}
+                  Name: {data.fullName}
                 </p>
                 <p className="text-[9px] text-zinc-500 mt-1">
-                  Gol. Darah: {data.bloodType}
+                  Blood: {data.bloodType}
                 </p>
               </div>
               <ul className="text-[8px] text-zinc-400 space-y-0.5">
-                <li>• Alergi terbuka saat pecah kaca</li>
-                <li>• Kontak keluarga otomatis diberi tahu</li>
-                <li>• Setiap akses tercatat di Monad</li>
+                <li>• Allergies shown when unconscious</li>
+                <li>• Family contact is notified automatically</li>
+                <li>• Every access is recorded on Monad</li>
               </ul>
             </div>
           </div>
@@ -143,13 +143,13 @@ export default function QRPage() {
               onClick={() => window.print()}
               className="h-14 rounded-xl bg-teal-600 px-6 text-white font-semibold hover:bg-teal-700"
             >
-              Print Kartu
+              Print Card
             </button>
             <Link
               to={`/e/${id}`}
               className="h-14 flex items-center justify-center rounded-xl border-2 border-zinc-300 px-6 text-zinc-700 font-semibold hover:bg-zinc-50"
             >
-              Lihat Halaman Darurat
+              View Emergency Page
             </Link>
           </div>
 

@@ -16,10 +16,18 @@ export default function App() {
             <img src={logo} alt="NadiPass" className="h-16 w-auto" />
           </Link>
           <nav className="flex gap-4 text-sm">
-            <Link to="/" className="text-zinc-700 hover:text-teal-700">Beranda</Link>
-            <Link to="/daftar" className="text-zinc-700 hover:text-teal-700">Daftar</Link>
-            <Link to="/qr" className="text-zinc-700 hover:text-teal-700">QR</Link>
-            <Link to="/scan" className="text-zinc-700 hover:text-teal-700">Scan</Link>
+            <Link to="/" className="text-zinc-700 hover:text-teal-700">
+              Home
+            </Link>
+            <Link to="/daftar" className="text-zinc-700 hover:text-teal-700">
+              Register
+            </Link>
+            <Link to="/qr" className="text-zinc-700 hover:text-teal-700">
+              QR Card
+            </Link>
+            <Link to="/scan" className="text-zinc-700 hover:text-teal-700">
+              Scan
+            </Link>
           </nav>
         </div>
       </header>

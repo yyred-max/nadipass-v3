@@ -124,7 +124,9 @@ const LiveDot = () => (
       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
       <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500" />
     </span>
-    <span className="text-sm font-semibold text-emerald-400">Live on Monad Testnet</span>
+    <span className="text-sm font-semibold text-emerald-400">
+      Live on Monad Testnet
+    </span>
   </span>
 );
 
@@ -144,16 +146,19 @@ export default function Home() {
         />
 
         <div className="relative mx-auto grid max-w-6xl px-6 lg:grid-cols-2 lg:px-0">
-          {/* Kiri: teks */}
+          {/* Left: text */}
           <div className="flex flex-col justify-center px-6 pt-6 sm:pt-0">
-            <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-4 py-1.5 text-xs font-semibold text-teal-700">
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-teal-200 bg-teal-50 px-4 py-1.5 text-xs font-semibold text-teal-700">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-teal-500" />
               Powered by Monad
             </div>
 
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl">
               Responders can access emergency data
-              <span className="text-red-600"> even when patients are unconscious.</span>
+              <span className="text-red-600">
+                {' '}
+                even when patients are unconscious.
+              </span>
             </h1>
 
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-zinc-600">
@@ -161,7 +166,7 @@ export default function Home() {
               transparent, immutable, and private.
             </p>
 
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:justify-start">
               <Link
                 to="/daftar"
                 className="flex h-14 items-center justify-center rounded-xl bg-teal-600 px-7 text-base font-semibold text-white transition-colors duration-200 hover:bg-teal-700"
@@ -177,35 +182,35 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Kanan: maskot + blob */}
-          <div className="relative hidden justify-center lg:flex">
+          {/* Right: mascot + blob — CENTERED */}
+          <div className="relative hidden items-center justify-center lg:flex">
             <div
               aria-hidden="true"
-              className="absolute inset-0 rounded-[2rem] bg-teal-500/10"
+              className="absolute inset-0 m-auto h-80 w-80 rounded-[2rem] bg-teal-500/10"
             />
-            <div className="relative mx-auto h-64 w-64 sm:h-72 sm:w-72">
+            <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
               <div className="absolute inset-0 rounded-[2rem] bg-teal-500 shadow-xl shadow-teal-200" />
               <img
                 src="/mascot.png"
-                alt="Mascot NadiPass"
-                className="relative h-full w-full rounded-[2rem] object-contain"
+                alt="NadiPass mascot"
+                className="relative h-full w-full rounded-[2rem] object-contain p-4"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ====== ON-CHAIN (Paling penting) ====== */}
+      {/* ====== ON-CHAIN ====== */}
       <section className="relative px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* Kiri: 4 card */}
+            {/* Left: 4 cards */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
                 Every access is recorded on blockchain
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-zinc-600">
-                Data medis tetap di HP kamu. Hanya hash audit yang on-chain.
+                Medical data stays on your phone. Only audit hashes go on-chain.
               </p>
 
               <div className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -217,19 +222,19 @@ export default function Home() {
                     icon: <CheckIcon />,
                   },
                   {
-                    n: 'Transparan',
+                    n: 'Transparent',
                     t: 'Who, when, why',
                     d: 'Every access records the requester, time, and reason.',
                     icon: <EyeIcon />,
                   },
                   {
-                    n: 'Privasi',
+                    n: 'Privacy',
                     t: 'Medical data is NOT on-chain',
                     d: 'Only audit hashes go on-chain. Original data stays on your phone.',
                     icon: <ShieldCheckIcon />,
                   },
                   {
-                    n: 'Cepat',
+                    n: 'Fast',
                     t: '2 taps to open data',
                     d: 'Critical data appears in seconds, no login required.',
                     icon: <ClockIcon />,
@@ -244,9 +249,15 @@ export default function Home() {
                         {s.icon}
                       </span>
                       <div>
-                        <span className="text-xs font-semibold text-teal-600">{s.n}</span>
-                        <h3 className="mt-1 text-lg font-semibold text-zinc-900">{s.t}</h3>
-                        <p className="mt-1 text-sm leading-relaxed text-zinc-500">{s.d}</p>
+                        <span className="text-xs font-semibold text-teal-600">
+                          {s.n}
+                        </span>
+                        <h3 className="mt-1 text-lg font-semibold text-zinc-900">
+                          {s.t}
+                        </h3>
+                        <p className="mt-1 text-sm leading-relaxed text-zinc-500">
+                          {s.d}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -254,19 +265,24 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Kanan: live contract card */}
+            {/* Right: live contract card */}
             <div className="flex flex-col justify-center rounded-2xl border border-teal-200 bg-white p-8 shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex flex-wrap items-center gap-3">
                 <LiveDot />
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-700">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span
+                    aria-hidden="true"
+                    className="h-1.5 w-1.5 rounded-full bg-emerald-500"
+                  />
                   Verified
                 </span>
               </div>
 
               <div className="mt-6 rounded-xl bg-zinc-900 px-4 py-4">
-                <p className="text-xs font-medium tracking-wider text-zinc-400">Contract Address</p>
-                <p className="mt-1 font-mono text-sm text-zinc-100">
+                <p className="text-xs font-medium tracking-wider text-zinc-400">
+                  Contract Address
+                </p>
+                <p className="mt-1 font-mono text-sm text-zinc-100 break-all">
                   0xf5DD3E72c62928F67db27F479b89900e245215F1
                 </p>
               </div>
@@ -291,7 +307,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====== CARA KERJA ====== */}
+      {/* ====== HOW IT WORKS ====== */}
       <section className="px-6 py-16 bg-zinc-50 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-center text-3xl font-bold tracking-tight text-zinc-900">
@@ -326,8 +342,12 @@ export default function Home() {
                 <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-teal-100 text-teal-700 transition-transform duration-200 group-hover:scale-110">
                   {s.icon}
                 </div>
-                <h3 className="mt-6 text-lg font-semibold text-zinc-900">{s.t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-500">{s.d}</p>
+                <h3 className="mt-6 text-lg font-semibold text-zinc-900">
+                  {s.t}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+                  {s.d}
+                </p>
               </div>
             ))}
           </div>
@@ -349,15 +369,21 @@ export default function Home() {
             <div className="relative grid gap-10 text-center sm:grid-cols-3">
               <div>
                 <p className="text-5xl font-bold tracking-tight">2</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">taps to open data</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">
+                  taps to open data
+                </p>
               </div>
               <div>
-                <p className="text-5xl font-bold tracking-tight">&lt; 30 detik</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">open time</p>
+                <p className="text-5xl font-bold tracking-tight">&lt; 30 seconds</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">
+                  open time
+                </p>
               </div>
               <div>
                 <p className="text-5xl font-bold tracking-tight">100%</p>
-                <p className="mt-2 text-sm font-medium text-teal-100">recorded on-chain</p>
+                <p className="mt-2 text-sm font-medium text-teal-100">
+                  recorded on-chain
+                </p>
               </div>
             </div>
           </div>
@@ -381,19 +407,19 @@ export default function Home() {
                 to="/"
                 className="font-medium text-zinc-600 transition-colors duration-200 hover:text-teal-700"
               >
-                Beranda
+                Home
               </Link>
               <Link
                 to="/daftar"
                 className="font-medium text-zinc-600 transition-colors duration-200 hover:text-teal-700"
               >
-                Daftar
+                Register
               </Link>
               <Link
                 to="/qr"
                 className="font-medium text-zinc-600 transition-colors duration-200 hover:text-teal-700"
               >
-                QR
+                QR Card
               </Link>
               <a
                 href="https://testnet.monadvision.com"
@@ -404,7 +430,7 @@ export default function Home() {
                 Monad Explorer
               </a>
               <a
-                href="https://github.com/nadipass"
+                href="https://github.com/yyred-max/nadipass-v3"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-zinc-600 transition-colors duration-200 hover:text-teal-700"
@@ -416,11 +442,10 @@ export default function Home() {
 
           <div className="mt-8 border-t border-zinc-200 pt-8 text-center text-xs text-zinc-400">
             <p>
-              NadiPass is not an official medical record. Every access is recorded on Monad
-              testnet.
+              NadiPass is not an official medical record. Every access is
+              recorded on Monad testnet.
             </p>
             <p className="mt-2">
-              {' '}
               © {new Date().getFullYear()} NadiPass · Crafted for Monad
               Metropolis 2026 · Built on testnet
             </p>

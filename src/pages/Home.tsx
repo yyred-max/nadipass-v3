@@ -4,9 +4,9 @@ const EXPLORER_URL =
   'https://testnet.monadvision.com/address/0xf5DD3E72c62928F67db27F479b89900e245215F1';
 
 // ---------- SVG icons (Heroicons) ----------
-const CheckIcon = () => (
+const LockIcon = () => (
   <svg
-    className="h-5 w-5"
+    className="h-7 w-7"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -15,13 +15,14 @@ const CheckIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <path d="M20 6L9 17l-5-5" />
+    <rect x="3" y="11" width="18" height="11" rx="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
 const EyeIcon = () => (
   <svg
-    className="h-5 w-5"
+    className="h-7 w-7"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -37,7 +38,7 @@ const EyeIcon = () => (
 
 const ShieldCheckIcon = () => (
   <svg
-    className="h-5 w-5"
+    className="h-7 w-7"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -47,12 +48,13 @@ const ShieldCheckIcon = () => (
     aria-hidden="true"
   >
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M9 12l2 2 4-4" />
   </svg>
 );
 
-const ClockIcon = () => (
+const BoltIcon = () => (
   <svg
-    className="h-5 w-5"
+    className="h-7 w-7"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -61,8 +63,7 @@ const ClockIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 6v6l4 2" />
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
   </svg>
 );
 
@@ -135,7 +136,6 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* ====== HERO ====== */}
       <section className="relative overflow-hidden bg-gradient-to-b from-teal-50 to-white pb-20 pt-16 sm:pb-28">
-        {/* Latar blob teal */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-teal-100/60 blur-3xl"
@@ -182,7 +182,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Right: mascot + blob — CENTERED */}
+          {/* Right: mascot — CENTERED */}
           <div className="relative hidden items-center justify-center lg:flex">
             <div
               aria-hidden="true"
@@ -204,7 +204,7 @@ export default function Home() {
       <section className="relative px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* Left: 4 cards */}
+            {/* Left: 4 cards with colored icons */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
                 Every access is recorded on blockchain
@@ -219,43 +219,59 @@ export default function Home() {
                     n: 'Immutable',
                     t: 'Logs cannot be deleted or modified',
                     d: 'Every access is written to the chain, immutable.',
-                    icon: <CheckIcon />,
+                    icon: <LockIcon />,
+                    iconBg: 'bg-amber-500 text-white shadow-amber-200',
+                    cardBorder: 'border-amber-200',
+                    labelColor: 'text-amber-600',
                   },
                   {
                     n: 'Transparent',
                     t: 'Who, when, why',
                     d: 'Every access records the requester, time, and reason.',
                     icon: <EyeIcon />,
+                    iconBg: 'bg-blue-500 text-white shadow-blue-200',
+                    cardBorder: 'border-blue-200',
+                    labelColor: 'text-blue-600',
                   },
                   {
                     n: 'Privacy',
                     t: 'Medical data is NOT on-chain',
                     d: 'Only audit hashes go on-chain. Original data stays on your phone.',
                     icon: <ShieldCheckIcon />,
+                    iconBg: 'bg-emerald-500 text-white shadow-emerald-200',
+                    cardBorder: 'border-emerald-200',
+                    labelColor: 'text-emerald-600',
                   },
                   {
                     n: 'Fast',
                     t: '2 taps to open data',
                     d: 'Critical data appears in seconds, no login required.',
-                    icon: <ClockIcon />,
+                    icon: <BoltIcon />,
+                    iconBg: 'bg-violet-500 text-white shadow-violet-200',
+                    cardBorder: 'border-violet-200',
+                    labelColor: 'text-violet-600',
                   },
                 ].map((s) => (
                   <div
                     key={s.n}
-                    className="rounded-2xl border border-zinc-200 bg-white p-6 transition-shadow duration-200 hover:shadow-md"
+                    className={`rounded-2xl border-2 ${s.cardBorder} bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg`}
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-teal-700">
+                    <div className="flex flex-col gap-4">
+                      <span
+                        className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-md ${s.iconBg}`}
+                      >
                         {s.icon}
                       </span>
                       <div>
-                        <span className="text-xs font-semibold text-teal-600">
+                        <span
+                          className={`text-xs font-bold uppercase tracking-wider ${s.labelColor}`}
+                        >
                           {s.n}
                         </span>
-                        <h3 className="mt-1 text-lg font-semibold text-zinc-900">
+                        <h3 className="mt-1 text-lg font-bold text-zinc-900">
                           {s.t}
                         </h3>
-                        <p className="mt-1 text-sm leading-relaxed text-zinc-500">
+                        <p className="mt-2 text-sm leading-relaxed text-zinc-500">
                           {s.d}
                         </p>
                       </div>
